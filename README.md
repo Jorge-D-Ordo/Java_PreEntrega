@@ -9,30 +9,8 @@ Orientada principalmente a perfumes
 
 ## Avance del codigo
 
-Con Productos;
-Codigo Terminado :
+CRUD en productos completo
 
-- menu inicial de opciones
-- menu secundarios
-- inicalizar un array
-- Listar productos
-- Agregar producto
-- buscar productos usando varios parametros
-- eliminar producto por id solamente por seguridad
-
-Codigo Pendiente:
-
-- modificar producto
-
-Con Pedidos;
-Codigo Terminado :
-
-- menu inicial de opciones
-
-Codigo Pendiente :
-
-- Listar Pedidos
-- Crear pedido
-- Modificar pedido
-- Eliminar pedido
+Pedidos el menu inicial realizo
+No reuelto el CRUD de pedidos
 

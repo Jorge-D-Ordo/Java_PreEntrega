@@ -109,7 +109,7 @@ public class CatalogoProductos {
           *                        4 - Tamaño                                      *
           *                        5 - Precio                                      *
           *                        6 - Stock                                       *
-          *                        0 - No agregar mas y continuar                  *
+          *                        0 - No agregar condiciones y buscar             *
           **************************************************************************""");
       System.out.print("         Opción:");
       opcionUsuario = entrada.nextInt();
@@ -153,7 +153,6 @@ public class CatalogoProductos {
               precioProd = entrada.nextDouble();
               entrada.nextLine();  // Limpiar el buffer del scanner
               if (precioProd >= 0.0) {
-                // entrada.nextLine();  // Limpiar el buffer del scanner
                 break label3;
               } else {
                 System.out.println("¡Error! El precio debe ser un número positivo.");
@@ -242,6 +241,143 @@ public class CatalogoProductos {
     }
   }
 
+  // ****************************************************************************************************
+// Método para editar un producto por ID
+  public static void editarProductoPorId(ArrayList<Producto> listaProd, Scanner
+      entrada) {
+    int idProd;
+    Producto productoAEditar = null;
+    String confirmacionEditar = "";
+    boolean respuestaValida = false;
+    label6:
+    while (true) {
+      System.out.print("Ingrese el ID del producto: ");
+      idProd = entrada.nextInt();
+      entrada.nextLine();   // Limpiar el buffer
+      if (idProd > 0) {
+        break label6;
+      } else {
+        System.out.println("Por favor ingrese un valor numérico válido para el ID.");
+      }
+    }
+
+    // Buscar el producto por ID
+    for (Producto producto : listaProd) {
+      if (producto.getId() == idProd) {
+        productoAEditar = producto;
+        break;
+      }
+    }
+
+    // Si no se encuentra el producto, mostrar mensaje y salir
+    if (productoAEditar == null) {
+      System.out.println("No se encontró un producto con el ID: " + idProd);
+      return;
+    }
+    int opcionUsuario;
+    label9:
+    while (true) {
+      // Mostrar Producto a modificar
+      System.out.println("Seleccione el item del producto modificar :");
+      System.out.printf("%-5s %-12s %-50s %-10s %-15s %-10s\n", "ID", "1-Código", "2-Nombre",
+          "3-Tamaño",
+          "4-Precio", "5-Stock");
+      System.out.println(
+          "------------------------------------------------------------------------------------------------------");
+      System.out.printf("%-5d %-12s %-50s %-10s %-15.2f %-10d\n",
+          productoAEditar.getId(),
+          productoAEditar.getCodigo(),
+          productoAEditar.getNombre(),
+          productoAEditar.getTamanio(),
+          productoAEditar.getPrecio(),
+          productoAEditar.getStock());
+      System.out.println(
+          "------------------------------------------------------------------------------------------------------");
+      System.out.println(" --------- 0 - No modificar y salir ---------");
+
+      System.out.print("   seleccina que columna a modificar :");
+      opcionUsuario = entrada.nextInt();
+      entrada.nextLine();  // Limpiar el buffer del scanner
+      switch (opcionUsuario) {
+
+        // Modificar  Código
+        case 1 -> {
+          System.out.print("Ingrese el nuevo Código del producto: ");
+          productoAEditar.setCodigo(entrada.nextLine());
+          System.out.println("Cambio realizdo, el nuevo codigo es: " + productoAEditar.getCodigo());
+          pausa(entrada);
+        }
+        // Modificar Nombre
+        case 2 -> {
+          System.out.print("Ingrese el nuevo Nombre del producto: ");
+          productoAEditar.setNombre(entrada.nextLine());
+          System.out.println("Cambio realizdo, el nuevo nombre es: " + productoAEditar.getNombre());
+          pausa(entrada);
+        }
+        // Filtrar por Tamaño
+        case 3 -> {
+          System.out.print("Ingrese el nuevo Tamaño del producto: ");
+          productoAEditar.setTamanio(entrada.nextLine());
+          System.out.println(
+              "Cambio realizdo, el nuevo tamaño es: " + productoAEditar.getTamanio());
+          pausa(entrada);
+        }
+        // Modificar Precio
+        case 4 -> {
+          double nuevoPrecio;
+          label10:
+          while (true) {
+            System.out.print("Ingrese el nuevo Precio del producto: ");
+            try {
+              nuevoPrecio = entrada.nextDouble();
+              entrada.nextLine();  // Limpiar el buffer del scanner
+              if (nuevoPrecio >= 0.0) {
+                productoAEditar.setPrecio(nuevoPrecio);
+                System.out.println(
+                    "Cambio realizdo, el nuevo precio es: " + productoAEditar.getPrecio());
+                pausa(entrada);
+                break label10;
+              } else {
+                System.out.println("¡Error! El precio debe ser un número positivo.");
+              }
+            } catch (java.util.InputMismatchException e) {
+              System.out.println("¡Error! Ingrese un valor numérico válido para el precio.");
+              entrada.nextLine();  // Limpiar el buffer del scanner
+            }
+          }
+        }
+        // Modificar Stock
+        case 5 -> {
+          int nuevoStock;
+          label11:
+          while (true) {
+            System.out.print("Ingrese el nuevo Stock del producto: ");
+            nuevoStock = entrada.nextInt();
+            entrada.nextLine();   // Limpiar el buffer
+            if (nuevoStock >= 0) {
+              productoAEditar.setStock(nuevoStock);
+              System.out.println(
+                  "Cambio realizdo, el nuevo stock es: " + productoAEditar.getStock());
+              pausa(entrada);
+              break label11;
+            } else {
+              System.out.println("Por favor ingrese un valor numérico válido para el Stock.");
+              entrada.nextLine();  // Limpiar el buffer del scanner
+            }
+          }
+        }
+        // Salir
+        case 0 -> {
+          break label9; // corta el bucle donde se ejecuta
+        }
+        // Opción incorrecta
+        default -> System.out.println("Opción incorrecta, intente de nuevo");
+      }
+    }
+    System.out.println(" Terminando la edicion del producto");
+    pausa(entrada);
+  }
+
   // Método para eliminar un producto por ID con confirmación
   public static void eliminarProductoPorId(ArrayList<Producto> listaProd, Scanner
       entrada) {
@@ -291,10 +427,6 @@ public class CatalogoProductos {
         productoAEliminar.getStock());
     System.out.println(
         "------------------------------------------------------------------------------------------------------");
-
-    // *******************************************
-    // System.out.printf("Código: " + productoAEliminar.getCodigo() + " Producto: " +
-    //   productoAEliminar.getNombre());
 
     while (!respuestaValida) {
       System.out.println("Escriba 'si' para confirmar o 'no' para cancelar.");

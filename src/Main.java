@@ -25,11 +25,11 @@ public class Main {
           *           1 - Listar Productos           6 - Listar Pedidos            *
           *           2 - Agregar Producto           7 - Crear  Pedido             *
           *           3 - Buscar Producto            8 - Buscar Pedido             *
-          *           4 - Editar producto            9 - Modificar Pedido          *
+          *           4 - Editar producto por id     9 - Modificar Pedido          *
           *           5 - Borrar producto por id    10 - Eliminar  Pedido          *
           *                              0 - SALIR                                 *
           **************************************************************************
-                  NOTA: para Borrar busque el id del producto o pedido
+                  NOTA: para Borrar/Editar  busque el id del producto o pedido
                          con las opciones 1 o 3 previamente 
           """);
       System.out.print("         Opción:");
@@ -44,10 +44,7 @@ public class Main {
         // Buscar producto
         case 3 -> CatalogoProductos.buscarProducto(productosDB, entrada);
         // Editar producto
-        case 4 -> {
-          System.out.println("Editar producto....... Funcionalidad en progreso...");
-          pausa();
-        }
+        case 4 -> CatalogoProductos.editarProductoPorId(productosDB, entrada);
         // Borrar producto
         case 5 -> CatalogoProductos.eliminarProductoPorId(productosDB, entrada);
         // Listar pedidos
