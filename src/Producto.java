@@ -25,6 +25,7 @@ public class Producto {
   }
 
   public void setId(int Id) {
+
     this.id = Id;
   }
 
@@ -57,7 +58,7 @@ public class Producto {
   }
 
   public void setPrecio(double precio) {
-    if (precio >= 0) {
+    if (precio >= 0.0) {
       this.precio = precio;
     }
   }

@@ -37,20 +37,19 @@ public class CatalogoProductos {
     String tamanioProd = entrada.nextLine();
 
     // Validación para el precio
-    double precioProd = 0;
+    double precioProd = 0.0;
     boolean precioValido = false;
     while (!precioValido) {
       System.out.print("Ingrese el precio del producto: ");
       try {
         precioProd = entrada.nextDouble();
-        if (precioProd >= 0) {
+        if (precioProd >= 0.0) {
           precioValido = true;  // Si el precio es válido y positivo, salimos del bucle
         } else {
           System.out.println("¡Error! El precio debe ser un número positivo.");
         }
       } catch (java.util.InputMismatchException e) {
         System.out.println("¡Error! Ingrese un valor numérico válido para el precio.");
-        entrada.nextLine();  // Limpiar el buffer del scanner
       }
     }
 
@@ -88,15 +87,183 @@ public class CatalogoProductos {
     listaProd.add(nuevoProducto);
   }
 
+  // Método preparar los parametros de buscueda consulta usuerio
+  public static void buscarProducto(ArrayList<Producto> listaProd, Scanner entrada) {
+    //ArrayList<Producto> productosFiltrados = new ArrayList<>();
+    //Se inicializan las variables con valores falsos
+    int idProd = 0;
+    String codigoProd = "";
+    String nombreProd = "";
+    String tamanioProd = "";
+    double precioProd = -1.0;
+    int stockProd = -1;
+    int opcionUsuario;
+    label1:
+    while (true) {
+      System.out.println("""
+          **************************************************************************
+          *             ¿Como desea buscar? (puede combinar uno o mas):            *
+          *                        1 - ID                                          *
+          *                        2 - Código                                      *
+          *                        3 - Nombre                                      *
+          *                        4 - Tamaño                                      *
+          *                        5 - Precio                                      *
+          *                        6 - Stock                                       *
+          *                        0 - No agregar mas y continuar                  *
+          **************************************************************************""");
+      System.out.print("         Opción:");
+      opcionUsuario = entrada.nextInt();
+      entrada.nextLine();  // Limpiar el buffer del scanner
+      switch (opcionUsuario) {
+        // Filtrar por ID
+        case 1 -> {
+          label2:
+          while (true) {
+            System.out.print("Ingrese el ID del producto: ");
+            idProd = entrada.nextInt();
+            entrada.nextLine();   // Limpiar el buffer
+            if (idProd >= 0) {
+              break label2;
+            } else {
+              System.out.println("Por favor ingrese un valor numérico válido para el ID.");
+            }
+          }
+        }
+        // Filtrar por Código
+        case 2 -> {
+          System.out.print("Ingrese el Código del producto: ");
+          codigoProd = entrada.nextLine();
+        }
+        // Filtrar por Nombre
+        case 3 -> {
+          System.out.print("Ingrese el Nombre del producto: ");
+          nombreProd = entrada.nextLine();
+        }
+        // Filtrar por Tamaño
+        case 4 -> {
+          System.out.print("Ingrese el Tamaño del producto: ");
+          tamanioProd = entrada.nextLine();
+        }
+        // Filtrar por Precio
+        case 5 -> {
+          label3:
+          while (true) {
+            System.out.print("Ingrese el Precio del producto: ");
+            try {
+              precioProd = entrada.nextDouble();
+              entrada.nextLine();  // Limpiar el buffer del scanner
+              if (precioProd >= 0.0) {
+                // entrada.nextLine();  // Limpiar el buffer del scanner
+                break label3;
+              } else {
+                System.out.println("¡Error! El precio debe ser un número positivo.");
+              }
+            } catch (java.util.InputMismatchException e) {
+              System.out.println("¡Error! Ingrese un valor numérico válido para el precio.");
+              entrada.nextLine();  // Limpiar el buffer del scanner
+            }
+          }
+        }
+        // Filtrar por Stock
+        case 6 -> {
+          label4:
+          while (true) {
+            System.out.print("Ingrese el Stock del producto: ");
+            stockProd = entrada.nextInt();
+            entrada.nextLine();   // Limpiar el buffer
+            if (stockProd >= 0) {
+              break label4;
+            } else {
+              System.out.println("Por favor ingrese un valor numérico válido para el Stock.");
+            }
+          }
+        }
+        // Salir
+        case 0 -> {
+          System.out.println("Listado cumpliendo los parametros solicitados");
+          break label1; // corta el bucle donde se ejecuta
+        }
+        // Opción incorrecta
+        default -> System.out.println("Opción incorrecta, intente de nuevo");
+      }
+    }
+    System.out.println("*****************************");
+    // Mostrar muevo listado con filtos
+    CatalogoProductos.productoBuscar(listaProd, idProd, codigoProd, nombreProd, tamanioProd,
+        precioProd, stockProd, entrada);
+  }
+
+  // Método de busqueda  y filtros y listar
+  public static void productoBuscar(ArrayList<Producto> listaProd, int idProd, String
+          codigoProd,
+      String nombreProd, String tamanioProd, double precioProd, int stockProd, Scanner entrada) {
+    ArrayList<Producto> productosFiltrados = new ArrayList<>();
+    for (Producto producto : listaProd) {
+      boolean coincide = true;
+      // Filtrar por id (si se proporciona)
+      if (idProd > 0 && producto.getId() != idProd) {
+        coincide = false;
+      }
+      // Filtrar por código (si se proporciona)
+      if (!codigoProd.isEmpty() && !producto.getCodigo().toLowerCase()
+          .contains(codigoProd.toLowerCase())) {
+        coincide = false;
+      }
+      // Filtrar por nombre (si se proporciona)
+      if (!nombreProd.isEmpty() && !producto.getNombre().toLowerCase()
+          .contains(nombreProd.toLowerCase())) {
+        coincide = false;
+      }
+      // Filtrar por tamaño (si se proporciona)
+      if (!tamanioProd.isEmpty() && !producto.getTamanio().toLowerCase()
+          .contains(tamanioProd.toLowerCase())) {
+        coincide = false;
+      }
+      // Filtrar por precio (si se proporciona)
+      if (precioProd > 0 && producto.getPrecio() != precioProd) {
+        coincide = false;
+      }
+      // Filtrar por stock (si se proporciona)
+      if (stockProd > 0 && producto.getStock() != stockProd) {
+        coincide = false;
+      }
+
+      // Si el producto cumple con todos los filtros, añadirlo a la lista de productos filtrados
+      if (coincide) {
+        productosFiltrados.add(producto);
+      }
+    }
+    // Si hay productos que coinciden, mostrar el catálogo filtrado
+    if (productosFiltrados.isEmpty()) {
+      System.out.println("No se encontraron productos que coincidan con los filtros.");
+      pausa(entrada);
+    } else {
+      CatalogoProductos.listarCatalogo(productosFiltrados, entrada);
+    }
+  }
+
   // Método para eliminar un producto por ID con confirmación
-  public static void eliminarProductoPorId(ArrayList<Producto> listaProd, int id, Scanner entrada) {
+  public static void eliminarProductoPorId(ArrayList<Producto> listaProd, Scanner
+      entrada) {
+    int idProd;
     Producto productoAEliminar = null;
     String confirmacionEliminar = "";
     boolean respuestaValida = false;
+    label5:
+    while (true) {
+      System.out.print("Ingrese el ID del producto: ");
+      idProd = entrada.nextInt();
+      entrada.nextLine();   // Limpiar el buffer
+      if (idProd > 0) {
+        break label5;
+      } else {
+        System.out.println("Por favor ingrese un valor numérico válido para el ID.");
+      }
+    }
 
     // Buscar el producto por ID
     for (Producto producto : listaProd) {
-      if (producto.getId() == id) {
+      if (producto.getId() == idProd) {
         productoAEliminar = producto;
         break;
       }
@@ -104,14 +271,30 @@ public class CatalogoProductos {
 
     // Si no se encuentra el producto, mostrar mensaje y salir
     if (productoAEliminar == null) {
-      System.out.println("No se encontró un producto con el ID: " + id);
+      System.out.println("No se encontró un producto con el ID: " + idProd);
       return;
     }
 
     // Mostrar mensaje de confirmación
-    System.out.println("¿Está seguro de que desea eliminar el producto?");
-    System.out.printf("Código: " + productoAEliminar.getCodigo() + " Producto: " +
-        productoAEliminar.getNombre());
+    System.out.println("¿Está seguro de que desea eliminar el producto?"); //TODO ver esto**********
+    System.out.printf("%-5s %-12s %-50s %-10s %-15s %-10s\n", "ID", "Código", "Nombre",
+        "Tamaño",
+        "Precio", "Stock");
+    System.out.println(
+        "------------------------------------------------------------------------------------------------------");
+    System.out.printf("%-5d %-12s %-50s %-10s %-15.2f %-10d\n",
+        productoAEliminar.getId(),
+        productoAEliminar.getCodigo(),
+        productoAEliminar.getNombre(),
+        productoAEliminar.getTamanio(),
+        productoAEliminar.getPrecio(),
+        productoAEliminar.getStock());
+    System.out.println(
+        "------------------------------------------------------------------------------------------------------");
+
+    // *******************************************
+    // System.out.printf("Código: " + productoAEliminar.getCodigo() + " Producto: " +
+    //   productoAEliminar.getNombre());
 
     while (!respuestaValida) {
       System.out.println("Escriba 'si' para confirmar o 'no' para cancelar.");
@@ -130,6 +313,7 @@ public class CatalogoProductos {
         System.out.println("Opción no válida. Intente nuevamente.");
       }
     }
+    pausa(entrada);
   }
 
   // Método para listar el catálogo de productos
@@ -138,7 +322,8 @@ public class CatalogoProductos {
       System.out.println("El catálogo está vacío.");
       return;
     }
-    System.out.printf("%-5s %-12s %-50s %-10s %-15s %-10s\n", "ID", "Código", "Nombre", "Tamaño",
+    System.out.printf("%-5s %-12s %-50s %-10s %-15s %-10s\n", "ID", "Código", "Nombre",
+        "Tamaño",
         "Precio", "Stock");
     System.out.println(
         "------------------------------------------------------------------------------------------------------");
